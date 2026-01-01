@@ -42,3 +42,6 @@ DEVICE = "cpu"  # keep cpu for now
 API_HOST = "0.0.0.0"
 API_PORT = 8000
 API_RELOAD = True
+
+GEE_PROJECT_ID = "gee-student-project"
+
