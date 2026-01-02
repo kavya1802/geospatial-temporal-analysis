@@ -142,6 +142,7 @@ This project is based on the following IEEE research paper:
 - Node.js 16+ (for frontend)
 - Google Earth Engine account
 - Git
+- Github
 
 ### Backend Setup
 
