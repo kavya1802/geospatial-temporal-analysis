@@ -1,7 +1,6 @@
 # 🌍 Geospatial Temporal Analysis System
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Earth Engine](https://img.shields.io/badge/Google-Earth%20Engine-blue.svg)](https://earthengine.google.com/)
 [![IEEE](https://img.shields.io/badge/Base%20Paper-IEEE%20TGRS%202024-red.svg)](https://ieeexplore.ieee.org/document/10504785)
 
@@ -26,7 +25,7 @@ An intelligent system that analyzes geographical changes over time using satelli
 - [API Documentation](#api-documentation)
 - [Contributing](#contributing)
 - [Acknowledgments](#acknowledgments)
-- [License](#license)
+
 
 ---
 
