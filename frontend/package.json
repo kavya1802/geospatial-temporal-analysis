@@ -21,7 +21,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently --kill-others \"npm run backend\" \"npm run frontend\"",
+    "frontend": "react-scripts start",
+    "backend": "cd ../backend && set PYTHONIOENCODING=utf-8 && python src/main.py",
+    "frontend-only": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -43,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
