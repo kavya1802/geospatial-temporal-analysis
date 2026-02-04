@@ -45,7 +45,7 @@ function ImageComparison({ selectedYear, images = [] }) {
             </Typography>
             {currentImage && (
               <Chip 
-                label={`${currentImage.source?.toUpperCase() || 'AWS'}`} 
+                label={`${currentImage.source?.toUpperCase() || 'GEE'}`} 
                 size="small" 
                 color="primary"
               />
@@ -98,9 +98,9 @@ function ImageComparison({ selectedYear, images = [] }) {
             </Typography>
             {comparisonImage && (
               <Chip 
-                label={`${comparisonImage.source?.toUpperCase() || 'AWS'}`} 
+                label={`${comparisonImage.source?.toUpperCase() || 'GEE'}`} 
                 size="small" 
-                color="secondary"
+                color="success"
               />
             )}
           </Box>
@@ -146,7 +146,7 @@ function ImageComparison({ selectedYear, images = [] }) {
       {images.length > 0 && (
         <Grid item xs={12}>
           <Typography variant="body2" color="text.secondary" textAlign="center">
-            Data source: AWS Open Data (Sentinel-2) • {images.length} images loaded
+            Data source: {images[0]?.source?.toUpperCase() === 'GEE' ? 'Google Earth Engine' : images[0]?.source?.toUpperCase() || 'GEE'} (Sentinel-2) • {images.length} images loaded
           </Typography>
         </Grid>
       )}

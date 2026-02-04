@@ -97,39 +97,75 @@ function AnalysisPage() {
   }, []); // Empty dependency array - run only once on mount
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5', py: 4 }}>
+    <Box 
+      sx={{ 
+        minHeight: '100vh', 
+        background: 'linear-gradient(135deg, #22223b 0%, #4a4e69 50%, #9a8c98 100%)',
+        py: 4 
+      }}
+    >
       <Container maxWidth="xl">
         {/* Header */}
         <Box mb={3}>
           <Button
             startIcon={<ArrowBackIcon />}
             onClick={() => navigate('/')}
-            sx={{ mb: 2 }}
+            sx={{ 
+              mb: 2, 
+              color: '#f2e9e4',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              }
+            }}
           >
             Back to Home
           </Button>
-          <Paper sx={{ p: 3 }}>
+          <Paper 
+            sx={{ 
+              p: 3,
+              background: 'rgba(255, 255, 255, 0.15)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 8px 32px rgba(34, 34, 59, 0.2)',
+            }}
+          >
             <Grid container alignItems="center" spacing={2}>
               <Grid item xs={12} md={8}>
-                <Typography variant="h4" gutterBottom fontWeight="bold">
+                <Typography variant="h4" gutterBottom fontWeight="bold" sx={{ color: '#f2e9e4' }}>
                   Temporal Analysis Results
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" sx={{ color: 'rgba(242, 233, 228, 0.85)' }}>
                   Location: Latitude {latitude}, Longitude {longitude}
                 </Typography>
               </Grid>
               <Grid item xs={12} md={4} textAlign="right">
                 <Chip 
                   label={`Source: ${dataSource.toUpperCase()}`} 
-                  color="primary" 
-                  sx={{ mr: 1 }} 
+                  sx={{ 
+                    mr: 1,
+                    backgroundColor: 'rgba(154, 140, 152, 0.5)',
+                    color: '#f2e9e4',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  }} 
                 />
                 <Chip 
                   label={loading ? "Loading..." : error ? "Error" : "Complete"} 
-                  color={error ? "error" : "success"} 
-                  sx={{ mr: 1 }} 
+                  sx={{ 
+                    mr: 1,
+                    backgroundColor: error ? 'rgba(244, 67, 54, 0.5)' : 'rgba(76, 175, 80, 0.5)',
+                    color: '#f2e9e4',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  }} 
                 />
-                <Chip label={`${years.length} Years`} />
+                <Chip 
+                  label={`${years.length} Years`}
+                  sx={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                    color: '#f2e9e4',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  }} 
+                />
               </Grid>
             </Grid>
           </Paper>
@@ -137,38 +173,80 @@ function AnalysisPage() {
 
         {/* Error Message */}
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
+          <Alert 
+            severity="error" 
+            sx={{ 
+              mb: 3,
+              background: 'rgba(244, 67, 54, 0.2)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(244, 67, 54, 0.3)',
+              color: '#f2e9e4',
+              '& .MuiAlert-icon': {
+                color: '#ff8a80',
+              }
+            }}
+          >
             {error}
             <br />
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              Make sure the backend server is running: <code>python src/main.py</code>
+            <Typography variant="body2" sx={{ mt: 1, color: 'rgba(242, 233, 228, 0.85)' }}>
+              Make sure the backend server is running: <code style={{ color: '#c9ada7' }}>python src/main.py</code>
             </Typography>
           </Alert>
         )}
 
         {loading ? (
           <Box textAlign="center" py={10}>
-            <CircularProgress size={60} />
-            <Typography variant="h6" mt={2}>
+            <CircularProgress size={60} sx={{ color: '#c9ada7' }} />
+            <Typography variant="h6" mt={2} sx={{ color: '#f2e9e4' }}>
               Fetching satellite imagery from {dataSource.toUpperCase()}...
             </Typography>
-            <Typography variant="body2" color="text.secondary" mt={1}>
+            <Typography variant="body2" mt={1} sx={{ color: 'rgba(242, 233, 228, 0.7)' }}>
               This may take a moment as we download real satellite data
             </Typography>
           </Box>
         ) : (
           <>
             {/* Map */}
-            <Paper sx={{ p: 2, mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
+            <Paper 
+              sx={{ 
+                p: 2, 
+                mb: 3,
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 8px 32px rgba(34, 34, 59, 0.2)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  border: '1px solid #9a8c98',
+                  boxShadow: '0 0 20px rgba(154, 140, 152, 0.4), 0 8px 32px rgba(34, 34, 59, 0.25)',
+                },
+              }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: '#f2e9e4' }}>
                 Location Map
               </Typography>
               <MapComponent latitude={parseFloat(latitude)} longitude={parseFloat(longitude)} />
             </Paper>
 
             {/* Timeline */}
-            <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
+            <Paper 
+              sx={{ 
+                p: 3, 
+                mb: 3,
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 8px 32px rgba(34, 34, 59, 0.2)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  border: '1px solid #9a8c98',
+                  boxShadow: '0 0 20px rgba(154, 140, 152, 0.4), 0 8px 32px rgba(34, 34, 59, 0.25)',
+                },
+              }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: '#f2e9e4' }}>
                 Timeline: {selectedYear}
               </Typography>
               <TimelineSlider
@@ -179,8 +257,23 @@ function AnalysisPage() {
             </Paper>
 
             {/* Image Comparison */}
-            <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
+            <Paper 
+              sx={{ 
+                p: 3, 
+                mb: 3,
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 8px 32px rgba(34, 34, 59, 0.2)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  border: '1px solid #9a8c98',
+                  boxShadow: '0 0 20px rgba(154, 140, 152, 0.4), 0 8px 32px rgba(34, 34, 59, 0.25)',
+                },
+              }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: '#f2e9e4' }}>
                 Temporal Comparison
               </Typography>
               <ImageComparison 
@@ -190,44 +283,153 @@ function AnalysisPage() {
             </Paper>
 
             {/* Statistics */}
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Change Summary
+            <Paper 
+              sx={{ 
+                p: 3,
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 8px 32px rgba(34, 34, 59, 0.2)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  border: '1px solid #9a8c98',
+                  boxShadow: '0 0 20px rgba(154, 140, 152, 0.4), 0 8px 32px rgba(34, 34, 59, 0.25)',
+                },
+              }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: '#f2e9e4' }}>
+                Analysis Summary
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Box textAlign="center" p={2} bgcolor="#e3f2fd" borderRadius={2}>
-                    <Typography variant="h4" color="primary" fontWeight="bold">
-                      45%
+                  <Box 
+                    textAlign="center" 
+                    p={2} 
+                    borderRadius={2}
+                    sx={{
+                      background: 'rgba(33, 150, 243, 0.2)',
+                      border: '1px solid rgba(33, 150, 243, 0.3)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        background: 'rgba(33, 150, 243, 0.3)',
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 0 15px rgba(33, 150, 243, 0.4)',
+                      },
+                    }}
+                  >
+                    <Typography variant="h4" fontWeight="bold" sx={{ color: '#90caf9' }}>
+                      {analysisData?.images?.length || 0}
                     </Typography>
-                    <Typography variant="body2">Urban Growth</Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.85)' }}>Images Retrieved</Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Box textAlign="center" p={2} bgcolor="#e8f5e9" borderRadius={2}>
-                    <Typography variant="h4" color="success.main" fontWeight="bold">
-                      -23%
+                  <Box 
+                    textAlign="center" 
+                    p={2} 
+                    borderRadius={2}
+                    sx={{
+                      background: 'rgba(76, 175, 80, 0.2)',
+                      border: '1px solid rgba(76, 175, 80, 0.3)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        background: 'rgba(76, 175, 80, 0.3)',
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 0 15px rgba(76, 175, 80, 0.4)',
+                      },
+                    }}
+                  >
+                    <Typography variant="h4" fontWeight="bold" sx={{ color: '#a5d6a7' }}>
+                      {years.length > 0 ? `${years[years.length - 1] - years[0]}` : '0'}
                     </Typography>
-                    <Typography variant="body2">Forest Cover</Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.85)' }}>Years Span</Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Box textAlign="center" p={2} bgcolor="#fff3e0" borderRadius={2}>
-                    <Typography variant="h4" color="warning.main" fontWeight="bold">
-                      12%
+                  <Box 
+                    textAlign="center" 
+                    p={2} 
+                    borderRadius={2}
+                    sx={{
+                      background: 'rgba(255, 152, 0, 0.2)',
+                      border: '1px solid rgba(255, 152, 0, 0.3)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        background: 'rgba(255, 152, 0, 0.3)',
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 0 15px rgba(255, 152, 0, 0.4)',
+                      },
+                    }}
+                  >
+                    <Typography variant="h4" fontWeight="bold" sx={{ color: '#ffcc80' }}>
+                      {analysisData?.images?.length > 0 
+                        ? `${Math.round(analysisData.images.reduce((sum, img) => sum + (img.cloud_cover || 0), 0) / analysisData.images.length)}%`
+                        : 'N/A'}
                     </Typography>
-                    <Typography variant="body2">Agricultural Land</Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.85)' }}>Avg Cloud Cover</Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Box textAlign="center" p={2} bgcolor="#fce4ec" borderRadius={2}>
-                    <Typography variant="h4" color="error.main" fontWeight="bold">
-                      8
+                  <Box 
+                    textAlign="center" 
+                    p={2} 
+                    borderRadius={2}
+                    sx={{
+                      background: 'rgba(233, 30, 99, 0.2)',
+                      border: '1px solid rgba(233, 30, 99, 0.3)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        background: 'rgba(233, 30, 99, 0.3)',
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 0 15px rgba(233, 30, 99, 0.4)',
+                      },
+                    }}
+                  >
+                    <Typography variant="h4" fontWeight="bold" sx={{ color: '#f48fb1' }}>
+                      {analysisData?.images?.[0]?.satellite || 'Sentinel-2'}
                     </Typography>
-                    <Typography variant="body2">Major Changes</Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.85)' }}>Satellite Source</Typography>
                   </Box>
                 </Grid>
               </Grid>
+              
+              {/* Location Details */}
+              <Box 
+                mt={3} 
+                p={2} 
+                borderRadius={2}
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom fontWeight="bold" sx={{ color: '#f2e9e4' }}>
+                  Location Details
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6} sm={3}>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.7)' }}>Latitude</Typography>
+                    <Typography variant="body1" fontWeight="medium" sx={{ color: '#f2e9e4' }}>{latitude}</Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.7)' }}>Longitude</Typography>
+                    <Typography variant="body1" fontWeight="medium" sx={{ color: '#f2e9e4' }}>{longitude}</Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.7)' }}>First Image</Typography>
+                    <Typography variant="body1" fontWeight="medium" sx={{ color: '#f2e9e4' }}>
+                      {analysisData?.images?.[0]?.date || 'N/A'}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <Typography variant="body2" sx={{ color: 'rgba(242, 233, 228, 0.7)' }}>Latest Image</Typography>
+                    <Typography variant="body1" fontWeight="medium" sx={{ color: '#f2e9e4' }}>
+                      {analysisData?.images?.[analysisData.images.length - 1]?.date || 'N/A'}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
             </Paper>
           </>
         )}
