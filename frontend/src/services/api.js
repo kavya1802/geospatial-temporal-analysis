@@ -148,11 +148,61 @@ export const getImageUrl = (filename) => {
   return `${API_BASE_URL}/api/images/${filename}`;
 };
 
+/**
+ * Analyze location with RemoteCLIP AI
+ * @param {Object} params Analysis parameters
+ * @param {number} params.latitude Latitude
+ * @param {number} params.longitude Longitude
+ * @param {number} params.startYear Start year
+ * @param {number} params.endYear End year
+ */
+export const analyzeWithAI = async (params) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/analyze-with-ai`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        latitude: parseFloat(params.latitude),
+        longitude: parseFloat(params.longitude),
+        start_year: params.startYear || 2015,
+        end_year: params.endYear || 2024,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'AI Analysis failed');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('AI analysis failed:', error);
+    throw error;
+  }
+};
+
+/**
+ * Check AI model status
+ */
+export const getAIStatus = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/ai-status`);
+    return await response.json();
+  } catch (error) {
+    console.error('AI status check failed:', error);
+    return { available: false, status: 'offline' };
+  }
+};
+
 export default {
   checkHealth,
   getDataSources,
   searchImages,
   analyzeLocation,
+  analyzeWithAI,
+  getAIStatus,
   getDownloadedImages,
   getSampleLocations,
   getImageUrl

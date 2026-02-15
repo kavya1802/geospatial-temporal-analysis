@@ -224,19 +224,20 @@ class EarthEngineClient:
                         rgb = self.get_image_rgb(meta)
                         
                         if rgb is not None:
+                            # Save the image
+                            filename = f"{lat}_{lon}_{meta['date']}.png"
+                            saved_path = self.save_image(rgb, filename)
+                            
                             data = {
                                 'year': year,
                                 'date': meta['date'],
                                 'satellite': 'Sentinel-2',
                                 'cloud_cover': meta['cloud_cover'],
                                 'image_array': rgb,
-                                'source': 'gee'
+                                'source': 'gee',
+                                'file_path': str(saved_path)
                             }
                             temporal_data.append(data)
-                            
-                            # Save the image
-                            filename = f"{lat}_{lon}_{meta['date']}.png"
-                            self.save_image(rgb, filename)
                             
                     except Exception as e:
                         print(f"⚠️  Error loading image: {e}")

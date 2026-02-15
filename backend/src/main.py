@@ -333,6 +333,175 @@ async def get_sample_locations():
 
 
 # ============================================
+# RemoteCLIP Analysis Endpoints
+# ============================================
+
+# Global analyzer instance (lazy loaded)
+remoteclip_analyzer = None
+
+def get_remoteclip_analyzer():
+    """Get or initialize RemoteCLIP analyzer."""
+    global remoteclip_analyzer
+    if remoteclip_analyzer is None:
+        try:
+            from src.analysis.remoteclip_analyzer import RemoteCLIPAnalyzer
+            remoteclip_analyzer = RemoteCLIPAnalyzer(model_name='ViT-B-32')
+            remoteclip_analyzer.initialize()
+        except Exception as e:
+            print(f"⚠️ RemoteCLIP initialization failed: {e}")
+            return None
+    return remoteclip_analyzer
+
+
+class AnalyzeImagesRequest(BaseModel):
+    latitude: float
+    longitude: float
+    start_year: int = 2015
+    end_year: int = 2024
+
+
+@app.post("/api/analyze-with-ai")
+async def analyze_with_remoteclip(request: AnalyzeImagesRequest):
+    """
+    Analyze satellite images using RemoteCLIP AI model.
+    Returns temporal change analysis with natural language descriptions.
+    """
+    if data_loader is None:
+        raise HTTPException(status_code=500, detail="Data loader not initialized")
+    
+    try:
+        print(f"\n🤖 AI Analysis starting for: ({request.latitude}, {request.longitude})")
+        print(f"   Period: {request.start_year} - {request.end_year}")
+        
+        # First, get the temporal images
+        temporal_data = data_loader.get_temporal_images(
+            lat=request.latitude,
+            lon=request.longitude,
+            start_year=request.start_year,
+            end_year=request.end_year,
+            images_per_year=1
+        )
+        
+        if not temporal_data or len(temporal_data) < 2:
+            return {
+                "success": False,
+                "error": "Not enough images found for temporal analysis. Need at least 2 images.",
+                "images_found": len(temporal_data) if temporal_data else 0
+            }
+        
+        # Collect image paths and dates
+        image_paths = []
+        dates = []
+        images_info = []
+        
+        for data in temporal_data:
+            date_str = data.get("date", str(data.get("year", "Unknown")))
+            
+            # Get or create the file path
+            fpath = data.get("file_path", "")
+            
+            # If no file_path but we have image_array, save it and get the path
+            if not fpath and "image_array" in data:
+                from PIL import Image as PILImage
+                save_dir = BACKEND_DIR / "data" / "raw" / "gee"
+                save_dir.mkdir(parents=True, exist_ok=True)
+                filename = f"{request.latitude}_{request.longitude}_{date_str}.png"
+                fpath = str(save_dir / filename)
+                if not os.path.exists(fpath):
+                    img = PILImage.fromarray(data["image_array"])
+                    img.save(fpath)
+            
+            if fpath and os.path.exists(fpath):
+                image_paths.append(fpath)
+                dates.append(date_str)
+            
+            # Also prepare base64 for frontend display
+            if "image_array" in data:
+                from PIL import Image as PILImage
+                import io
+                
+                img = PILImage.fromarray(data["image_array"])
+                buffer = io.BytesIO()
+                img.save(buffer, format="PNG")
+                img_base64 = base64.b64encode(buffer.getvalue()).decode()
+                
+                images_info.append({
+                    "year": data.get("year"),
+                    "date": data.get("date"),
+                    "image_base64": f"data:image/png;base64,{img_base64}"
+                })
+        
+        # Initialize RemoteCLIP analyzer
+        analyzer = get_remoteclip_analyzer()
+        
+        if analyzer is None:
+            # Return basic response without AI analysis
+            return {
+                "success": True,
+                "ai_available": False,
+                "message": "RemoteCLIP model not available. Showing images only.",
+                "location": {
+                    "latitude": request.latitude,
+                    "longitude": request.longitude
+                },
+                "images": images_info,
+                "analysis": None
+            }
+        
+        # Perform temporal analysis with RemoteCLIP
+        print(f"   Analyzing {len(image_paths)} images with RemoteCLIP...")
+        temporal_analysis = analyzer.analyze_temporal_sequence(image_paths, dates)
+        
+        # Generate human-readable report
+        report = analyzer.generate_report(temporal_analysis)
+        print(report)
+        
+        return {
+            "success": True,
+            "ai_available": True,
+            "location": {
+                "latitude": request.latitude,
+                "longitude": request.longitude
+            },
+            "time_range": {
+                "start_year": request.start_year,
+                "end_year": request.end_year
+            },
+            "images_count": len(images_info),
+            "images": images_info,
+            "analysis": {
+                "classifications": temporal_analysis.get("individual_classifications", []),
+                "changes": temporal_analysis.get("pairwise_changes", []),
+                "overall_trend": temporal_analysis.get("overall_trend", {}),
+                "report": report
+            }
+        }
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/ai-status")
+async def get_ai_status():
+    """Check if RemoteCLIP AI analysis is available."""
+    try:
+        analyzer = get_remoteclip_analyzer()
+        return {
+            "available": analyzer is not None,
+            "model": "RemoteCLIP ViT-B-32" if analyzer else None,
+            "status": "ready" if analyzer else "not loaded"
+        }
+    except Exception as e:
+        return {
+            "available": False,
+            "model": None,
+            "status": f"error: {str(e)}"
+        }
+
+
+# ============================================
 # Main Entry Point
 # ============================================
 

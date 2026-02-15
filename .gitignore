@@ -16,6 +16,13 @@ Thumbs.db
 # Data outputs
 data/cache/
 data/processed/
+backend/data/raw/gee/*.png
+backend/data/raw/aws/*.png
+backend/data/raw/sample/*.png
+
+# Model weights (large files)
+backend/models/pretrained/models--*/
+backend/models/pretrained/.locks/
 
 # Node / Frontend
 frontend/node_modules/
